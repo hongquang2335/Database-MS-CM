@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classicmodels Analytics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <div id="admin-modal" class="admin-modal hidden">
+      <div class="admin-modal-backdrop" id="admin-modal-backdrop"></div>
+      <section class="admin-card">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Admin</p>
+            <h3>Đăng nhập quản trị</h3>
+          </div>
+          <button type="button" id="admin-close" class="icon-button">×</button>
+        </div>
+
+        <form id="admin-login-form" class="auth-form">
+          <label>
+            Tài khoản admin
+            <input type="text" name="username" placeholder="admin" required />
+          </label>
+          <label>
+            Mật khẩu
+            <input type="password" name="password" placeholder="Nhập mật khẩu" required />
+          </label>
+          <button type="submit">Đăng nhập admin</button>
+        </form>
+        <p id="auth-error" class="auth-error hidden"></p>
+      </section>
+    </div>
+
+    <div id="app-shell" class="page-shell">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">Classicmodels</p>
+          <h1>Analytics Hub</h1>
+          <p class="sidebar-copy">
+            Dashboard thống kê, báo cáo, tìm kiếm và pivot cho dữ liệu khách hàng, đơn hàng và mặt hàng.
+          </p>
+          <div class="user-badge-wrap">
+            <span id="user-badge" class="user-badge hidden"></span>
+            <button type="button" id="admin-login-button" class="ghost">Đăng nhập admin</button>
+            <button type="button" id="logout-button" class="ghost hidden">Đăng xuất</button>
+          </div>
+        </div>
+
+        <form id="filter-form" class="filter-panel">
+          <label>
+            Từ ngày
+            <input type="date" name="startDate" />
+          </label>
+          <label>
+            Đến ngày
+            <input type="date" name="endDate" />
+          </label>
+          <label>
+            Trạng thái đơn
+            <select name="status">
+              <option value="">Tất cả</option>
+            </select>
+          </label>
+          <label>
+            Khách hàng
+            <select name="customerNumber">
+              <option value="">Tất cả</option>
+            </select>
+          </label>
+          <label>
+            Mặt hàng
+            <select name="productCode">
+              <option value="">Tất cả</option>
+            </select>
+          </label>
+          <label>
+            Dòng sản phẩm
+            <select name="productLine">
+              <option value="">Tất cả</option>
+            </select>
+          </label>
+          <label>
+            Tìm khách hàng
+            <input type="text" name="customerKeyword" placeholder="Tên / liên hệ" />
+          </label>
+          <label>
+            Tìm mặt hàng
+            <input type="text" name="productKeyword" placeholder="Tên / mã hàng" />
+          </label>
+          <div class="filter-actions">
+            <button type="submit">Áp dụng</button>
+            <button type="button" id="reset-filters" class="ghost">Đặt lại</button>
+          </div>
+        </form>
+      </aside>
+
+      <main class="content">
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Báo cáo thời gian thực</p>
+            <h2>Doanh số, khách hàng, đơn hàng và cơ cấu sản phẩm trong một màn hình.</h2>
+          </div>
+          <div id="connection-status" class="status-chip">Đang kiểm tra kết nối DB...</div>
+        </section>
+
+        <section class="tabs-shell">
+          <div class="tabs" id="tabs-nav">
+            <button type="button" class="tab-button active" data-tab="overview">Tổng quan</button>
+            <button type="button" class="tab-button" data-tab="charts">Biểu đồ</button>
+            <button type="button" class="tab-button" data-tab="pivot">Pivot</button>
+            <button type="button" class="tab-button" data-tab="report">Báo cáo</button>
+          </div>
+
+          <section class="tab-panel active" data-tab-panel="overview">
+            <section class="metrics" id="metrics"></section>
+            <section class="grid two-up">
+              <article class="panel">
+                <div class="panel-head">
+                  <h3>Doanh số theo tháng</h3>
+                </div>
+                <div id="monthly-sales-chart" class="chart-host"></div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-head">
+                  <h3>Doanh số theo dòng sản phẩm</h3>
+                </div>
+                <div id="product-line-chart" class="chart-host"></div>
+              </article>
+            </section>
+          </section>
+
+          <section class="tab-panel" data-tab-panel="charts">
+            <section class="grid two-up">
+              <article class="panel">
+                <div class="panel-head">
+                  <h3>Top khách hàng</h3>
+                </div>
+                <div id="top-customers-chart" class="chart-host"></div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-head">
+                  <h3>Doanh số theo tháng</h3>
+                </div>
+                <div id="monthly-sales-chart-alt" class="chart-host"></div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-head">
+                  <h3>Doanh số theo dòng sản phẩm</h3>
+                </div>
+                <div id="product-line-chart-alt" class="chart-host"></div>
+              </article>
+            </section>
+          </section>
+
+          <section class="tab-panel" data-tab-panel="pivot">
+            <article class="panel">
+              <div class="panel-head">
+                <h3>Pivot doanh số</h3>
+                <select id="pivot-dimension">
+                  <option value="productLine">Dòng sản phẩm x Tháng</option>
+                  <option value="customer">Khách hàng x Tháng</option>
+                </select>
+              </div>
+              <div class="table-wrap">
+                <table id="pivot-table"></table>
+              </div>
+            </article>
+          </section>
+
+          <section class="tab-panel" data-tab-panel="report">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Báo cáo chi tiết đơn hàng</h3>
+                <div class="report-actions">
+                  <label>
+                    Số dòng
+                    <select id="report-limit">
+                      <option value="25">25</option>
+                      <option value="50" selected>50</option>
+                      <option value="100">100</option>
+                      <option value="200">200</option>
+                    </select>
+                  </label>
+                  <button id="export-csv" type="button" class="ghost">Xuất CSV</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table id="report-table"></table>
+              </div>
+            </section>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="chatbot-shell" class="chatbot-shell">
+      <button type="button" id="chatbot-toggle" class="chatbot-toggle">Chatbot hỗ trợ</button>
+      <section id="chatbot-panel" class="chatbot-panel hidden" aria-label="Chatbot hỗ trợ">
+        <div class="chatbot-head">
+          <div>
+            <p class="eyebrow">Trợ lý</p>
+            <h3>Classicmodels Bot</h3>
+          </div>
+          <button type="button" id="chatbot-close" class="icon-button">×</button>
+        </div>
+
+        <div id="chatbot-messages" class="chatbot-messages"></div>
+
+        <div class="chatbot-quick-actions">
+          <button type="button" class="quick-action" data-prompt="Mở tab biểu đồ">Biểu đồ</button>
+          <button type="button" class="quick-action" data-prompt="Mở tab pivot">Pivot</button>
+          <button type="button" class="quick-action" data-prompt="Mở tab báo cáo">Báo cáo</button>
+          <button type="button" class="quick-action" data-prompt="Hướng dẫn tìm khách hàng">Tìm KH</button>
+        </div>
+
+        <form id="chatbot-form" class="chatbot-form">
+          <input id="chatbot-input" type="text" placeholder="Nhập câu hỏi, ví dụ: mở tab báo cáo" autocomplete="off" />
+          <button type="submit">Gửi</button>
+        </form>
+      </section>
+    </div>
+  </body>
+</html>
