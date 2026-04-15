@@ -319,7 +319,10 @@ function renderDashboardCharts(dashboard) {
     series: [{ name: "Doanh số", data: dashboard.productLineSales.map((row) => Number(row.revenue || 0)) }],
     xaxis: { categories: dashboard.productLineSales.map((row) => row.productLine) },
     plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: "55%" } },
-    yaxis: { labels: { formatter: (value) => formatNumber(value) } },
+    xaxis: {
+      categories: dashboard.productLineSales.map((row) => row.productLine),
+      labels: { formatter: (value) => formatNumber(value) },
+    },
   });
 
   renderChart("topCustomers", "top-customers-chart", {
