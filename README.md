@@ -12,6 +12,28 @@ Website thống kê và báo cáo cho cơ sở dữ liệu `classicmodels`, gồ
 - Đăng nhập admin riêng bằng nút `Đăng nhập admin`.
 - ORM với `Sequelize`.
 
+## Giao diện
+
+### Tổng quan
+
+![Tổng quan dashboard](./overal.png)
+
+### Biểu đồ
+
+![Biểu đồ dashboard](./chart.png)
+
+### Pivot
+
+![Pivot doanh số](./pivot.png)
+
+### Báo cáo
+
+![Báo cáo chi tiết](./report.png)
+
+### Chatbot
+
+![Chatbot hỗ trợ](./chatbot.png)
+
 ## Truy cập hệ thống
 
 ### Người xem thường
@@ -32,8 +54,8 @@ Hiện tại phần admin mới là session đăng nhập riêng để mở rộ
 
 Project hiện đã có ORM bằng `Sequelize`:
 
-- [db/sequelize.js](C:/Users/quang/Documents/mon%20hoc/he%20quan%20tri/15_4/db/sequelize.js): khởi tạo kết nối ORM.
-- [db/models.js](C:/Users/quang/Documents/mon%20hoc/he%20quan%20tri/15_4/db/models.js): khai báo model `Customer`, `Order`, `Product`, `ProductLine` và association.
+- [db/sequelize.js](./db/sequelize.js): khởi tạo kết nối ORM.
+- [db/models.js](./db/models.js): khai báo model `Customer`, `Order`, `Product`, `ProductLine` và association.
 
 Hiện trạng sử dụng:
 
